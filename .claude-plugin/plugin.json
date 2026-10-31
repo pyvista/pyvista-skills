@@ -10,11 +10,5 @@
   "homepage": "https://github.com/pyvista/pyvista-skills",
   "repository": "https://github.com/pyvista/pyvista-skills",
   "license": "MIT",
-  "keywords": [
-    "pyvista",
-    "3d",
-    "visualization",
-    "mesh",
-    "agent-skill"
-  ]
+  "keywords": ["pyvista", "3d", "visualization", "mesh", "agent-skill"]
 }
