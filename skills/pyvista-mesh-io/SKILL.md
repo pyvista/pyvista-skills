@@ -31,6 +31,7 @@ Pick the dataset class from the data's shape, then respect its array contracts.
 
 - Read anything VTK reads: `pv.read("mesh.vtu")` — extension decides the reader. Common: `.vtk`, `.vtu`, `.vtp`, `.stl`, `.ply`, `.obj`, `.vtkhdf`.
 - Save with `mesh.save("out.vtu")`. Pick the extension that matches the data class: PolyData → `.vtp`/`.stl`/`.ply`; UnstructuredGrid → `.vtu`; ImageData → `.vti`.
+- Full format ↔ class table and exchange-format rules of thumb: [references/file-formats.md](references/file-formats.md)
 - Round-trip check after nontrivial mesh edits:
 
 ```python

@@ -22,6 +22,7 @@ pl.add_mesh(
 
 - PyVista shows `active_scalars` by default. Pass `scalars=` to be deterministic.
 - `nan_color` controls how NaN scalars render. Fill NaNs with `np.nan_to_num` or set `nan_color` when a mask is intended.
+- Full option tables (data mapping, appearance, lighting): [references/add_mesh-options.md](references/add_mesh-options.md)
 - Vector fields: use `mesh.glyphs(...)` (see pyvista-filtering), not raw `add_mesh`.
 
 ## Layouts
