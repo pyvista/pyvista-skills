@@ -41,10 +41,11 @@ def parse_skill_md(path: Path) -> tuple[dict, str]:
 class TestSkillStructure:
     def test_required_frontmatter_fields(self, skill_md):
         fm, _ = parse_skill_md(skill_md)
-        assert isinstance(fm.get("name"), str) and fm["name"], "name is required"
-        assert isinstance(fm.get("description"), str) and fm["description"].strip(), (
-            "description is required and must not be empty"
-        )
+        assert isinstance(fm.get("name"), str), "name must be a string"
+        assert fm["name"], "name is required"
+        description_field = fm.get("description")
+        assert isinstance(description_field, str), "description must be a string"
+        assert description_field.strip(), "description is required and must not be empty"
 
     def test_name_is_valid_and_matches_directory(self, skill_md):
         fm, _ = parse_skill_md(skill_md)
@@ -85,8 +86,7 @@ class TestSkillStructure:
         for child in skill_md.parent.iterdir():
             if child.is_dir():
                 assert child.name in VALID_SECTIONS, (
-                    f"unexpected directory '{child.name}'; "
-                    f"allowed: {sorted(VALID_SECTIONS)}"
+                    f"unexpected directory '{child.name}'; allowed: {sorted(VALID_SECTIONS)}"
                 )
 
     def test_local_reference_links_resolve(self, skill_md):
@@ -97,9 +97,7 @@ class TestSkillStructure:
                 continue
             target = (skill_md.parent / link).resolve()
             assert target.exists(), f"broken relative link: {link}"
-            assert target.is_relative_to(skill_md.parent), (
-                f"link escapes skill root: {link}"
-            )
+            assert target.is_relative_to(skill_md.parent), f"link escapes skill root: {link}"
 
 
 def test_repository_has_skills():

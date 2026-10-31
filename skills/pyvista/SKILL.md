@@ -20,7 +20,7 @@ import pyvista as pv
 ## Core workflow
 
 ```python
-mesh = pv.Sphere()                 # any PolyData/UnstructuredGrid/...
+mesh = pv.Sphere()  # any PolyData/UnstructuredGrid/...
 pl = pv.Plotter()
 pl.add_mesh(mesh, color="tan", show_edges=True)
 pl.show()
@@ -65,7 +65,7 @@ Facts that prevent wrong code:
 ```python
 pl = pv.Plotter(off_screen=True, window_size=(1024, 768))
 pl.add_mesh(mesh)
-img = pl.screenshot()   # (H, W, 3) uint8 array
+img = pl.screenshot()  # (H, W, 3) uint8 array
 ```
 
 - Linux CI/containers usually need X: call `pv.start_xvfb()` once before the first render. On Windows/macOS it is unnecessary and errors on Linux-only setups.

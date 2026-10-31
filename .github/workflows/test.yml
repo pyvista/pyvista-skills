@@ -15,6 +15,7 @@ jobs:
           python-version: "3.12"
       - run: pip install pre-commit
       - uses: pre-commit/action@v3.0.1
+        # ruff + ruff-format run here via .pre-commit-config.yaml
 
   markdown:
     runs-on: ubuntu-latest
