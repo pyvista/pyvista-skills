@@ -14,7 +14,7 @@ npx skills add pyvista/pyvista-skills
 
 In Claude Code, you can also add this repository as a plugin marketplace:
 
-```
+```text
 /plugin marketplace add pyvista/pyvista-skills
 ```
 
@@ -22,8 +22,8 @@ Manual installation: copy the skill directory (for example `skills/pyvista/`) in
 
 ## Skills
 
-| Skill | Description |
-|-------|-------------|
+| Skill     | Description                                                                              |
+| --------- | ---------------------------------------------------------------------------------------- |
 | `pyvista` | Core PyVista visualization workflows: plotting, mesh I/O, filtering, and common pitfalls |
 
 More skills are planned — see the [roadmap](https://github.com/pyvista/pyvista-skills/issues/1).
