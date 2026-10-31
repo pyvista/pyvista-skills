@@ -8,6 +8,10 @@ repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.17.3
     hooks:
+      # Python files only: Markdown code blocks are owned by prettier.
+      # ruff >= 0.17 formats python-in-markdown and fights prettier.
       - id: ruff
         args: [--fix]
+        files: \.py$
       - id: ruff-format
+        files: \.py$

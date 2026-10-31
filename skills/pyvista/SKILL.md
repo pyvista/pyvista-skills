@@ -1,11 +1,27 @@
 ---
 name: pyvista
-description: Write, debug, and review Python code that uses PyVista for 3D visualization, mesh processing, and VTK datasets. Use whenever a task creates, changes, tests, or reviews code importing pyvista, builds or inspects meshes (PolyData, UnstructuredGrid, ImageData, StructuredGrid), renders 3D scenes, or converts matplotlib/2D plotting tasks into 3D visualization. Do not use for matplotlib, general NumPy-only work, or VTK C++ pipelines that do not touch the pyvista API.
+description: >-
+  Entry skill for writing, debugging, and reviewing Python code that uses PyVista
+  for 3D visualization, mesh processing, and VTK datasets. Covers imports, Plotter
+  lifecycle, dataset routing, and render verification. Use for any task touching
+  code that imports pyvista. For focused work prefer the sibling skills:
+  pyvista-plotting, pyvista-mesh-io, pyvista-filtering, pyvista-widgets. Do not
+  use for matplotlib, general NumPy-only work, or VTK C++ pipelines that do not
+  touch the pyvista API.
 ---
 
 # PyVista
 
 Write the smallest PyVista code that renders the requested result correctly. PyVista is the Pythonic VTK layer: meshes are NumPy-backed objects, filters return new meshes, and rendering goes through `Plotter`.
+
+This skill is the entry point. Route focused work to the sibling skill before writing code:
+
+| Task                                                       | Skill               |
+| ---------------------------------------------------------- | ------------------- |
+| Rendering, colors, cameras, layouts, screenshots, backends | `pyvista-plotting`  |
+| Dataset types, points/faces contracts, file I/O            | `pyvista-mesh-io`   |
+| Filters, transformations, glyphs, booleans                 | `pyvista-filtering` |
+| Interactive slider/button/key widgets                      | `pyvista-widgets`   |
 
 ## Imports and versions
 
@@ -32,60 +48,12 @@ pl.show()
 
 `pl.show()` finalizes the plotter. Do not add meshes after it. Open a new `Plotter` for the next figure instead of reusing one.
 
-## Datasets
+## Invariants that apply everywhere
 
-| Class                 | Holds                                            | Typical source                             |
-| --------------------- | ------------------------------------------------ | ------------------------------------------ |
-| `pv.PolyData`         | points + surface cells (verts/lines/faces)       | `pv.Sphere()`, STL/OBJ files, point clouds |
-| `pv.UnstructuredGrid` | arbitrary cells + data                           | simulations, `.vtu` files                  |
-| `pv.ImageData`        | uniform voxel grid (spacing, dimensions, origin) | volumes, images                            |
-| `pv.StructuredGrid`   | curvilinear points grid                          | parametric meshes                          |
-| `pv.RectilinearGrid`  | axis-aligned variable spacing                    | Cartesian grids                            |
-
-Facts that prevent wrong code:
-
-- `mesh.points` is an `(N, 3)` float array. Modify in place or reassign; never shrink it without rebuilding the mesh.
-- `mesh.faces` on `PolyData` is a flat array `[n, i0, i1, i2, n, j0, j1, j2, ...]`. If `mesh.is_all_triangles`, `mesh.faces.reshape(-1, 4)` works; otherwise it does not.
-- Build meshes from NumPy with `pv.PolyData(points, faces=...)` or `pv.wrap(array)`.
-- Point data: `mesh.point_data["name"] = arr` where `arr.shape[0] == mesh.n_points`. Cell data must match `mesh.n_cells`. Mismatch raises or silently misrenders — check lengths before assigning.
-- Filters (`clip`, `slice`, `threshold`, `decimate`, `extract_surface`, `contour`, `smooth_taubin`, `triangulate`) return new meshes. Pass `inplace=True` only when the project already relies on it.
-- `mesh.bounds`, `mesh.center`, `mesh.n_points`, `mesh.n_cells` are properties, not methods.
-
-## Plotting essentials
-
-- `add_mesh(mesh, scalars="name", cmap="viridis", clim=[lo, hi], show_edges=True, opacity=0.5)`. PyVista shows `active_scalars` by default; pass `scalars=` explicitly to be deterministic.
-- `nan_color` controls how NaN scalars render. Fill NaNs with `np.nan_to_num` or set `nan_color` when a mask is intended.
-- Layout: `pv.Plotter(shape=(rows, cols))` then `pl.subplot(r, c)` before each `add_mesh`.
-- Cameras: `pl.camera_position = "xy" | "iso" | [pos, focal, viewup]`. Set after adding meshes.
-- Text/axes: `pl.add_text`, `pl.add_axes` (orientation widget: `pl.add_axes` replaces deprecated `add_axes` variants; prefer `pl.show_axes()` only when an interactive widget is unwanted).
-- Themes: `pv.set_plot_theme("dark")` or tweak `pv.global_theme` (background, fonts, colorbars). Set once at startup, not per figure.
-
-## Headless and off-screen rendering
-
-```python
-pl = pv.Plotter(off_screen=True, window_size=(1024, 768))
-pl.add_mesh(mesh)
-img = pl.screenshot()  # (H, W, 3) uint8 array
-```
-
-- Linux CI/containers usually need X: call `pv.start_xvfb()` once before the first render. On Windows/macOS it is unnecessary and errors on Linux-only setups.
-- Save figures with `pl.screenshot("out.png")` or `pl.show(screenshot="out.png")`. `window_size` sets pixel size.
-- In Jupyter, `pv.set_jupyter_backend("trame")` (interactive), `"static"`, or `"client"`. If trame is missing, the backend falls back to static — do not assume interactivity.
-
-## File I/O
-
-- Read anything VTK reads: `pv.read("mesh.vtu")` — extension decides the reader. Common: `.vtk`, `.vtu`, `.vtp`, `.stl`, `.ply`, `.obj`, `.vtkhdf`.
-- Save with `mesh.save("out.vtu")`. Pick the extension that matches the data class (PolyData → `.vtp`/`.stl`/`.ply`; UnstructuredGrid → `.vtu`).
-- Round-trip check after nontrivial mesh edits: `assert pv.read(tmp).n_points == mesh.n_points`.
-
-## Typical pitfalls
-
-1. Mutating `mesh.points` after adding the mesh to a plotter does not refresh the render — rebuild or re-add the actor.
-2. Faces arrays built with `np.array([...])` of mixed triangle counts produce silent geometry corruption. Use helper constructors (`pv.Box`, `pv.Cylinder`, `pv.Plane`, `pv.Line`) or verified face arrays.
-3. `pl.show()` inside scripts on headless machines hangs. Use `off_screen=True`.
-4. Scalar range surprises: set `clim` explicitly; VTK auto-range includes outliers.
-5. Z-up vs Y-up: PyVista is Z-up. When importing assets from Y-up tools, rotate explicitly, never eyeball.
-6. Comparing meshes: compare `points` arrays and cell connectivity, not object identity — filters always allocate new objects.
+- Filters return new meshes. Pass `inplace=True` only when the project already relies on it.
+- PyVista is Z-up. When importing assets from Y-up tools, rotate explicitly, never eyeball.
+- Mutating `mesh.points` after adding the mesh to a plotter does not refresh the render — rebuild or re-add the actor.
+- Theme: `pv.set_plot_theme("dark")` or tweak `pv.global_theme`. Set once at startup, not per figure.
 
 ## Verify before finishing
 
