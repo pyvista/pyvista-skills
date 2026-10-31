@@ -1,0 +1,9 @@
+{
+  "globs": ["**/*.md"],
+  "config": {
+    "default": true,
+    "MD013": false,
+    "MD040": false
+  },
+  "ignore": [".venv/**", "node_modules/**"]
+}
