@@ -9,9 +9,12 @@ pip install pre-commit && pre-commit install   # one-time setup
 pre-commit run --all-files                     # whitespace, yaml, ruff
 npx markdownlint-cli2                          # markdown lint (config: .markdownlint-cli2.jsonc)
 npx prettier --check .                         # markdown formatting
-python -m pytest -q                            # skill structural tests
+python -m pytest -q                            # structural + eval-harness tests
 uvx --from skills-ref agentskills validate skills/<name>  # spec validation
+python3 scripts/run_evals.py validate          # eval case catalog (offline, no spend)
 ```
+
+Behavioral evaluation (does an installed skill change agent output?) lives in `evals/` with its harness in `scripts/run_evals.py`, `scripts/judge.py`, and `scripts/run_scenario_eval.py`. Offline subcommands (`validate`, `plan`, `score`, `measure`, scenario `validate`) run without network access and are covered by pytest; anything that spends money is documented in `evals/README.md` and never runs in CI.
 
 Python files (tests, scripts) are linted with **ruff**, all rules enabled (`select = ["ALL"]`; documented exceptions in `ruff.toml`). Markdown is formatted with **prettier**; ruff does not touch Markdown code blocks.
 

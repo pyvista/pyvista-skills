@@ -24,3 +24,5 @@ ignore = [
 
 [lint.per-file-ignores]
 "tests/*" = ["PLR2004"] # magic values are fine in test fixtures
+"scripts/run_evals.py" = ["TRY004"] # invalid-type score rows are validation errors, not bugs
+"scripts/judge.py" = ["TRY004"] # invalid-type judge verdicts are validation errors, not bugs
