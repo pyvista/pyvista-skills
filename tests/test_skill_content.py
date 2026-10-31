@@ -102,3 +102,41 @@ class TestSkillStructure:
 
 def test_repository_has_skills():
     assert SKILL_MD_PATHS, "no SKILL.md found under skills/"
+
+
+# --- Token budget (token-efficient writing, cf. caveman) -----------------
+
+# Rough token estimate: ~4 chars per token for English/technical prose.
+# Real tokenizers vary per agent; this heuristic is deterministic and
+# good enough to catch regressions.
+CHARS_PER_TOKEN = 4
+MAX_BODY_TOKENS = 1200
+MAX_DESCRIPTION_TOKENS = 200
+
+
+def estimate_tokens(text: str) -> int:
+    return len(text) // CHARS_PER_TOKEN
+
+
+@pytest.mark.parametrize(
+    "skill_md", SKILL_MD_PATHS, ids=lambda p: str(p.parent.relative_to(REPO_ROOT))
+)
+class TestTokenBudget:
+    def test_description_within_budget(self, skill_md):
+        fm, _ = parse_skill_md(skill_md)
+        description = fm["description"]
+        if isinstance(description, list):
+            description = " ".join(description)
+        cost = estimate_tokens(description)
+        assert cost <= MAX_DESCRIPTION_TOKENS, (
+            f"description costs ~{cost} tokens (limit {MAX_DESCRIPTION_TOKENS}); "
+            "it loads into every agent's context at startup — tighten the trigger"
+        )
+
+    def test_body_within_budget(self, skill_md):
+        _, body = parse_skill_md(skill_md)
+        cost = estimate_tokens(body)
+        assert cost <= MAX_BODY_TOKENS, (
+            f"body costs ~{cost} tokens (limit {MAX_BODY_TOKENS}); "
+            "move lookup material into references/"
+        )
