@@ -1,5 +1,7 @@
 # PyVista Skills
 
+[![skills.sh](https://skills.sh/b/pyvista/pyvista-skills)](https://skills.sh/pyvista/pyvista-skills)
+
 Official [Agent Skills](https://agentskills.io/specification) for [PyVista](https://github.com/pyvista/pyvista), the Python library for 3D visualization and mesh analysis.
 
 Skills are reusable instruction packages (`SKILL.md` files) that teach AI coding agents how to work with PyVista effectively — writing correct plotting code, loading and filtering meshes, and verifying rendered output. They follow the open [Agent Skills specification](https://agentskills.io/specification) and work with any compatible coding agent, including Claude Code, OpenAI Codex, Cursor, OpenCode, Gemini CLI, and pi.
