@@ -1,0 +1,26 @@
+line-length = 96
+target-version = "py312"
+
+[lint]
+# All ruff rules enabled. Only rules that conflict with ruff format or the
+# project's test style are ignored:
+#   COM812/ISC001 — redundant with ruff format
+#   ANN           — type annotations not enforced on this small test suite
+#   D101/D102/D103 — test classes/methods are self-documenting by name
+#   INP001        — tests/ is not a package
+#   S101          — assert is the point of pytest
+#   T201          — CI summary output uses print
+ignore = [
+  "ANN",
+  "COM812",
+  "D101",
+  "D102",
+  "D103",
+  "INP001",
+  "ISC001",
+  "S101",
+  "T201",
+]
+
+[lint.per-file-ignores]
+"tests/*" = ["PLR2004"] # magic values are fine in test fixtures
