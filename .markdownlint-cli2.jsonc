@@ -3,7 +3,7 @@
   "config": {
     "default": true,
     "MD013": false,
-    "MD040": false
+    "MD040": false,
   },
-  "ignore": [".venv/**", "node_modules/**"]
+  "ignore": [".venv/**", "node_modules/**"],
 }

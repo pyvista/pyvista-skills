@@ -46,7 +46,7 @@ def _has_display() -> bool:
     return bool(os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY"))
 
 
-def render(mesh_path: Path, window_size: tuple[int, int]) -> "object":
+def render(mesh_path: Path, window_size: tuple[int, int]) -> object:
     """Render the mesh off-screen and return the (H, W, 3) uint8 image."""
     import pyvista as pv
 
@@ -58,7 +58,7 @@ def render(mesh_path: Path, window_size: tuple[int, int]) -> "object":
     return pl.screenshot()
 
 
-def compare(actual: "object", baseline_path: Path, max_mean_diff: float) -> list[str]:
+def compare(actual: object, baseline_path: Path, max_mean_diff: float) -> list[str]:
     """Return a list of failure reasons (empty when the images match)."""
     import numpy as np
     from PIL import Image
@@ -154,7 +154,6 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.out:
         import pyvista as pv  # noqa: F401 — ensures vtk libs are loaded first
-
         from PIL import Image
 
         Image.fromarray(img).save(args.out)
