@@ -6,11 +6,24 @@ Skills are reusable instruction packages (`SKILL.md` files) that teach AI coding
 
 ## Installation
 
-Using the [skills CLI](https://github.com/vercel-labs/skills):
+### Skills CLI (all agents)
+
+Using the [skills CLI](https://github.com/vercel-labs/skills), which auto-detects installed agents:
 
 ```sh
 npx skills add pyvista/pyvista-skills
 ```
+
+Useful flags:
+
+```sh
+npx skills add pyvista/pyvista-skills -g            # install globally (user-level)
+npx skills add pyvista/pyvista-skills -a <agent>    # target a specific agent
+npx skills add pyvista/pyvista-skills --copy        # copy instead of symlink
+npx skills add pyvista/pyvista-skills -l            # list skills without installing
+```
+
+### Claude Code plugin marketplace
 
 In Claude Code, you can also add this repository as a plugin marketplace:
 
@@ -18,7 +31,17 @@ In Claude Code, you can also add this repository as a plugin marketplace:
 /plugin marketplace add pyvista/pyvista-skills
 ```
 
-Manual installation: copy the skill directory (for example `skills/pyvista/`) into your agent's skills folder, such as `~/.claude/skills/`, `~/.pi/agent/skills/`, or your project's `.claude/skills/`.
+### Manual installation
+
+Copy the skill directory (for example `skills/pyvista/`) into your agent's skills folder:
+
+| Agent        | User-level path                            | Project-level path |
+| ------------ | ------------------------------------------ | ------------------ |
+| Claude Code  | `~/.claude/skills/`                        | `.claude/skills/`  |
+| pi           | `~/.pi/agent/skills/`, `~/.agents/skills/` | `.agents/skills/`  |
+| Other agents | use `npx skills add` auto-detection        | —                  |
+
+Verified: the skills CLI discovers this repository and installs `pyvista` to `~/.agents/skills/` (pi) and `~/.claude/skills/` (Claude Code).
 
 ## Skills
 
