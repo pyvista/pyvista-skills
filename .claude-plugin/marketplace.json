@@ -1,0 +1,20 @@
+{
+  "name": "pyvista-skills",
+  "owner": {
+    "name": "The PyVista Developers",
+    "url": "https://pyvista.org"
+  },
+  "metadata": {
+    "description": "Official PyVista Agent Skills."
+  },
+  "plugins": [
+    {
+      "name": "pyvista",
+      "source": "./",
+      "description": "PyVista 3D visualization skills: plotting, mesh I/O, filtering, and render verification.",
+      "license": "MIT",
+      "keywords": ["pyvista", "3d", "visualization", "mesh", "agent-skill"],
+      "skills": ["./skills/pyvista"]
+    }
+  ]
+}
