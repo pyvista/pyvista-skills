@@ -1,0 +1,14 @@
+{
+  "name": "pyvista",
+  "displayName": "PyVista Skills",
+  "version": "0.1.0",
+  "description": "PyVista 3D visualization skills for AI coding agents: plotting, mesh processing, and render verification.",
+  "author": {
+    "name": "The PyVista Developers",
+    "url": "https://pyvista.org"
+  },
+  "homepage": "https://github.com/pyvista/pyvista-skills",
+  "repository": "https://github.com/pyvista/pyvista-skills",
+  "license": "MIT",
+  "keywords": ["pyvista", "3d", "visualization", "mesh", "agent-skill"]
+}
