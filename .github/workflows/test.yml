@@ -1,0 +1,50 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pre-commit
+      - uses: pre-commit/action@v3.0.1
+
+  markdown:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Lint Markdown
+        run: npx --yes markdownlint-cli2 "**/*.md"
+      - name: Check Markdown formatting
+        run: npx --yes prettier --check .
+
+  validate-skills:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install skills-ref
+      - name: Validate skills against the Agent Skills specification
+        run: |
+          found=0
+          for skill_dir in skills/*/; do
+            [ -f "${skill_dir}SKILL.md" ] || continue
+            found=1
+            echo "Validating ${skill_dir}"
+            agentskills validate "${skill_dir}"
+          done
+          if [ "$found" -eq 0 ]; then
+            echo "No skills yet — nothing to validate."
+          fi
